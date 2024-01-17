@@ -86,6 +86,8 @@
         */
         function rockPaperScissors(humanChoice) {
 
+            console.log(humanChoice);
+
             var choiceName = ["Rock","Paper","Scissors"];
 
             //STEP 1:
@@ -93,7 +95,8 @@
             //1 is rock
             //2 is paper
             //3 is scissors
-            var computerChoice;
+            var computerChoice = dice(3);
+
 
             //This boolean value represents if the human won
             var humanWins = false;
@@ -104,27 +107,84 @@
             //STEP 2:
             //Check to see who won and set humanWins & tied
             //You'll need to build additional if statements
-            if () {}
+            if (humanChoice == computerChoice) {
+                tied = true;
+            }
 
-            //STEP 3:
-            //Build a string to display the results of the game
-            //Put it in the end variable
-            //It should include:
+            if (humanChoice == 1){
+                if (computerChoice == 3) {
+                    humanWins = true;
+                }
+            }
+
+            if (humanChoice == 2) {
+                if (computerChoice == 1) {
+                    humanWins = true;
+                }
+            }
+
+            if (humanChoice == 3) {
+                if (computerChoice == 2) {
+                    humanWins = true;
+                }
+            }
+
+
+            // STEP 3:
+            // Build a string to display the results of the game
+            // Put it in the end variable
+            // It should include:
             //    a) What you chose
             //    b) What the computer chose
             //    c) Whether you won or not
-            //You may need if statements somewhere around this task
-            var end;
+            // You may need if statements somewhere around this task
+            var end = `The computer chose ${choiceName[computerChoice-1]} and you chose ${choiceName[humanChoice-1]}.`;
+
+            if (tied) {
+                end += ` You tied!`
+            }
+            else if (humanWins) {
+                end += ` You won!`
+            }
+            else {
+                end += ` You lost!`
+            }
+
+            console.log(end);
 
             //STEP 4:
             //Reach out into the DOM with getElementById() and insert the end into the result div.
 
+            let result = document.getElementById("result");
+            result.innerHTML = end;
+
         }
 
         //This code links in the Rock button so that when it's clicked it fires off the game.
+        
+        
+        // Rock Button
+
+
         document.getElementById("rock").onclick = () => {
             rockPaperScissors(1);
         };
+
+
+        // Paper Button
+
+        document.getElementById("paper").onclick = () => {
+            rockPaperScissors(2);
+        };
+
+
+        // Scissors Button
+
+        document.getElementById("scissors").onclick = () => {
+            rockPaperScissors(3);
+        };
+
+
 
         //STEP 5:
         //Below, link up the other two buttons with an EventListener so that the user can click on them and activate the game.
