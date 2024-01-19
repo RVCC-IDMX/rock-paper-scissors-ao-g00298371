@@ -79,9 +79,12 @@
             }
 
             #choices {
-                display: grid;
+                /* display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
-                padding: auto;
+                padding: auto; */
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
                 gap: 1rem;
             }
 
@@ -98,7 +101,7 @@
 
             button:hover {
                 transition: transform 250ms ease-out;
-                transform: scale(1.05);
+                transform: scale(1.02);
             }
         </style>
     </head>
@@ -131,6 +134,7 @@
       
                   When this function is called, it returns a random number from 1 to the number of sides passed to it.
               */
+            console.log('speechSynthesis' in window);
             function dice(sides) {
                 return Math.ceil(Math.random() * sides);
             }
@@ -150,6 +154,10 @@
                   
               */
             function rockPaperScissors(humanChoice) {
+                // Disabling all inpu until the animation is finished to prevent weird behavior. 
+                document.querySelectorAll("button").forEach(button => { button.disabled = true; });
+
+
                 var choiceName = ['Rock', 'Paper', 'Scissors', 'Lizard', 'Spock'];
 
                 //STEP 1:
@@ -159,7 +167,7 @@
                 //3 is scissors
                 //4 is lizard
                 //5 is Spock
-                var computerChoice = dice(3);
+                var computerChoice = dice(5);
 
                 //This boolean value represents if the human won
                 var humanWins = false;
@@ -237,13 +245,18 @@
                 result.innerText = "";
                 function type() {
                     if (index < end.length) {
+                        // Append each letter one by one with a delay to simulate typing
                         result.innerText += end[index];
                         index += 1;
                         setTimeout(type, 30);
+                    } else {
+                        // If there's no more text for the computer to type, then re-enable the buttons. 
+                        document.querySelectorAll("button").forEach(button => { button.disabled = false; });
                     }
                 }
 
                 type();
+
             }
 
 
