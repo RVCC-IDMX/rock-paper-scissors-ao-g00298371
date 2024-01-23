@@ -1,145 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock Paper Scissors</title>
 
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Rock Paper Scissors</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
-        <style>
-            *,
-            *::before,
-            *::after {
-                font-family: 'Courier New', Courier, monospace;
-                margin: 0;
-                padding: 0;
-            }
+      :root {
+        --element-border-radius: 30px;
+        --pseudo-border-radius: 30px;
+        --pseudo-border: 7px solid black;
+        --box-border: 10px solid black;
+        --button-border: 6px solid black;
+        --button-border-radius: 10px;
+        --button-background-color: #ffecb8;
+        --result-background-color: #f6a6b2;
+        --title-background-color: #b7ded2;
+        --ui-panel-background-color: #f7c297;
+        --page-background-color: #90d2d8;
+        --max-element-width: 500px;
+        /* Color Palette: https://www.color-hex.com/color-palette/43555 */
+      }
+      *,
+      *::before,
+      *::after {
+        font-family: 'Oswald', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
-            body {
-                display: flex;
-                flex-direction: column-reverse;
-                margin: 1rem;
-            }
+      body {
+        background: var(--page-background-color);
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        padding: 1rem;
+      }
 
-            #result {
-                font-size: 2rem;
-                padding: 1rem;
-                min-height: 4rem;
-            }
+      #result {
+        border: 5px solid black;
+        background: var(--result-background-color);
+        border-radius: var(--element-border-radius);
+        font-size: 2rem;
+        padding-block: 1rem;
+        padding-inline: 2rem;
+        min-height: 4rem;
+        max-width: 800px;
+      }
 
-            #result::before {
-                content: 'Result: ';
-                font-weight: bold;
-                font-size: 2.2rem;
-            }
+      #result::before {
+        content: 'Result: ';
+        font-weight: bold;
+        font-size: 2.2rem;
+      }
 
-            @keyframes blink {
-                0% {
-                    opacity: 1;
-                }
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
 
-                50% {
-                    opacity: 0;
-                }
+        50% {
+          opacity: 0;
+        }
 
-                100% {
-                    opacity: 1;
-                }
+        100% {
+          opacity: 1;
+        }
+      }
 
-            }
+      #result::after {
+        content: '|';
+        font-size: 2.6rem;
+        animation: blink 1s infinite ease-in-out;
+      }
 
-            #result::after {
-                /* Maybe add a pulsing cursor? */
-                content: '|';
-                font-size: 2.6rem;
-                animation: blink 1s infinite ease-in-out;
-            }
+      #bid::before {
+        display: block;
+        content: 'ROCK PAPER SCISSORS LIZARD SPOCK';
+        background: var(--title-background-color);
+        font-size: 2rem;
+        font-weight: bold;
+        padding: 0.7rem;
+        border: var(--pseudo-border);
+        border-radius: var(--pseudo-border-radius);
+        margin-block-end: 2rem;
+      }
 
-            #bid::before {
-                display: block;
-                content: 'ROCK PAPER SCISSORS LIZARD SPOCK';
-                font-size: 3rem;
-                font-weight: bold;
-                text-decoration: underline;
-                margin-block-end: 3rem;
-            }
+      #bid {
+        background: var(--ui-panel-background-color);
+        border: var(--box-border);
+        border-radius: var(--element-border-radius);
+        margin-block-end: 3rem;
+        padding-inline: 20px;
+        padding-block: 20px;
+        text-align: center;
+      }
 
-            #bid {
-                border-radius: 10px;
-                border: 4px solid black;
-                margin-block-end: 3rem;
-                padding: 20px;
-                text-align: center;
-            }
+      #bid,
+      #result {
+        padding: 1rem;
+      }
 
-            #bid h1 {
-                padding: 0px;
-                margin: 0px;
-                padding-bottom: 20px;
-            }
+      #bid h1 {
+        padding: 0px;
+        margin: 0px;
+        font-size: 2rem;
+        padding-block-end: 20px;
+      }
 
-            #choices {
-                /* display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                padding: auto; */
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
+      #choices {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
 
-            button {
-                transition: transform 100ms ease-out;
-                transform: scale(1);
-                border: 4px solid teal;
-                background: rgb(180, 255, 212);
-                font-weight: bold;
-                border-radius: 10px;
-                font-size: 2rem;
-                padding: 20px;
-            }
+      button {
+        transition: transform 100ms ease-out;
+        transform: scale(1);
+        border: var(--button-border);
+        background: var(--button-background-color);
+        font-weight: bold;
+        border-radius: var(--button-border-radius);
+        font-size: 2rem;
+        padding-inline: 20px;
+        padding-block: 10px;
+      }
 
-            button:hover {
-                transition: transform 250ms ease-out;
-                transform: scale(1.02);
-            }
-        </style>
-    </head>
+      button:hover {
+        transition: transform 250ms ease-out;
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
 
-    <body>
-        <div id="result">
-            <!-- This is where our results will go -->
-        </div>
+  <body>
+    <div id="result">
+      <!-- This is where our results will go -->
+    </div>
 
-        <div id="bid">
-            <h1>Choose:</h1>
+    <div id="bid">
+      <h1>Choose:</h1>
 
-            <div id="choices">
-                <button id="rock">Rock</button>
+      <div id="choices">
+        <button id="rock">Rock</button>
 
-                <button id="paper">Paper</button>
+        <button id="paper">Paper</button>
 
-                <button id="scissors">Scissors</button>
+        <button id="scissors">Scissors</button>
 
-                <button id="lizard">Lizard</button>
+        <button id="lizard">Lizard</button>
 
-                <button id="spock">Spock</button>
-            </div>
-        </div>
+        <button id="spock">Spock</button>
+      </div>
+    </div>
 
-        <script>
-
-            /*
+    <script>
+      /*
                   Random number generator
       
                   When this function is called, it returns a random number from 1 to the number of sides passed to it.
               */
-            console.log('speechSynthesis' in window);
-            function dice(sides) {
-                return Math.ceil(Math.random() * sides);
-            }
+      function dice(sides) {
+        return Math.ceil(Math.random() * sides);
+      }
 
-            /*
+      /*
                   Game function
       
                   It takes a single argument: humanChoice
@@ -153,147 +181,148 @@
                   3) Displays the play of the game
                   
               */
-            function rockPaperScissors(humanChoice) {
-                // Disabling all inpu until the animation is finished to prevent weird behavior. 
-                document.querySelectorAll("button").forEach(button => { button.disabled = true; });
+      function rockPaperScissors(humanChoice) {
+        // Disabling all input until the animation is finished to prevent weird behavior.
+        document.querySelectorAll('button').forEach((button) => {
+          button.disabled = true;
+        });
 
+        var choiceName = ['Rock', 'Paper', 'Scissors', 'Lizard', 'Spock'];
 
-                var choiceName = ['Rock', 'Paper', 'Scissors', 'Lizard', 'Spock'];
+        //STEP 1:
+        //Determine a random choice for the computer
+        //1 is rock
+        //2 is paper
+        //3 is scissors
+        //4 is lizard
+        //5 is Spock
+        var computerChoice = dice(5);
 
-                //STEP 1:
-                //Determine a random choice for the computer
-                //1 is rock
-                //2 is paper
-                //3 is scissors
-                //4 is lizard
-                //5 is Spock
-                var computerChoice = dice(5);
+        //This boolean value represents if the human won
+        var humanWins = false;
 
-                //This boolean value represents if the human won
-                var humanWins = false;
+        //This boolean value represents if there's a tie
+        var tied = false;
 
-                //This boolean value represents if there's a tie
-                var tied = false;
+        //STEP 2:
+        //Check to see who won and set humanWins & tied
+        //You'll need to build additional if statements
+        if (humanChoice == computerChoice) {
+          tied = true;
+        }
+        //1 is rock (beats scissors(3) and lizard(4))
+        //2 is paper (beats rock(1) and spock(5))
+        //3 is scissors (beats paper(2) and lizard(4))
+        //4 is lizard (beats Spock(5) and paper(2))
+        //5 is Spock (beats scissors(3) and rock(1))
+        if (humanChoice == 1) {
+          if (computerChoice == 3 || computerChoice == 4) {
+            humanWins = true;
+          }
+        }
 
-                //STEP 2:
-                //Check to see who won and set humanWins & tied
-                //You'll need to build additional if statements
-                if (humanChoice == computerChoice) {
-                    tied = true;
-                }
-                //1 is rock (beats scissors(3) and lizard(4))
-                //2 is paper (beats rock(1) and spock(5))
-                //3 is scissors (beats paper(2) and lizard(4))
-                //4 is lizard (beats Spock(5) and paper(2))
-                //5 is Spock (beats scissors(3) and rock(1))
-                if (humanChoice == 1) {
-                    if (computerChoice == 3 || computerChoice == 4) {
-                        humanWins = true;
-                    }
-                }
+        if (humanChoice == 2) {
+          if (computerChoice == 1 || computerChoice == 5) {
+            humanWins = true;
+          }
+        }
 
-                if (humanChoice == 2) {
-                    if (computerChoice == 1 || computerChoice == 5) {
-                        humanWins = true;
-                    }
-                }
+        if (humanChoice == 3) {
+          if (computerChoice == 2 || computerChoice == 4) {
+            humanWins = true;
+          }
+        }
+        if (humanChoice == 4) {
+          if (computerChoice == 2 || computerChoice == 5) {
+            humanWins = true;
+          }
+        }
+        if (humanChoice == 5) {
+          if (computerChoice == 3 || computerChoice == 1) {
+            humanWins = true;
+          }
+        }
 
-                if (humanChoice == 3) {
-                    if (computerChoice == 2 || computerChoice == 4) {
-                        humanWins = true;
-                    }
-                }
-                if (humanChoice == 4) {
-                    if (computerChoice == 2 || computerChoice == 5) {
-                        humanWins = true;
-                    }
-                }
-                if (humanChoice == 5) {
-                    if (computerChoice == 3 || computerChoice == 1) {
-                        humanWins = true;
-                    }
-                }
+        // STEP 3:
+        // Build a string to display the results of the game
+        // Put it in the end variable
+        // It should include:
+        //    a) What you chose
+        //    b) What the computer chose
+        //    c) Whether you won or not
+        // You may need if statements somewhere around this task
+        var end = `The computer chose ${
+          choiceName[computerChoice - 1]
+        } and you chose ${choiceName[humanChoice - 1]}.`;
 
-                // STEP 3:
-                // Build a string to display the results of the game
-                // Put it in the end variable
-                // It should include:
-                //    a) What you chose
-                //    b) What the computer chose
-                //    c) Whether you won or not
-                // You may need if statements somewhere around this task
-                var end = `The computer chose ${choiceName[computerChoice - 1]
-                    } and you chose ${choiceName[humanChoice - 1]}.`;
+        if (tied) {
+          end += ` You tied!`;
+        } else if (humanWins) {
+          end += ` You won!`;
+        } else {
+          end += ` You lost!`;
+        }
 
-                if (tied) {
-                    end += ` You tied!`;
-                } else if (humanWins) {
-                    end += ` You won!`;
-                } else {
-                    end += ` You lost!`;
-                }
+        // console.log(end);
 
-                // console.log(end);
+        //STEP 4:
+        //Reach out into the DOM with getElementById() and insert the end into the result div.
 
-                //STEP 4:
-                //Reach out into the DOM with getElementById() and insert the end into the result div.
+        let result = document.getElementById('result');
 
-                let result = document.getElementById('result');
+        let index = 0;
 
-                let index = 0;
+        result.innerText = '';
+        function type() {
+          if (index < end.length) {
+            // Append each letter one by one with a delay to simulate typing
+            result.innerText += end[index];
+            index += 1;
+            setTimeout(type, 30);
+          } else {
+            // If there's no more text for the computer to type, then re-enable the buttons.
+            document.querySelectorAll('button').forEach((button) => {
+              button.disabled = false;
+            });
+          }
+        }
 
-                result.innerText = "";
-                function type() {
-                    if (index < end.length) {
-                        // Append each letter one by one with a delay to simulate typing
-                        result.innerText += end[index];
-                        index += 1;
-                        setTimeout(type, 30);
-                    } else {
-                        // If there's no more text for the computer to type, then re-enable the buttons. 
-                        document.querySelectorAll("button").forEach(button => { button.disabled = false; });
-                    }
-                }
+        type();
+      }
 
-                type();
+      //This code links in the Rock button so that when it's clicked it fires off the game.
 
-            }
+      // Rock Button
 
+      document.getElementById('rock').onclick = () => {
+        rockPaperScissors(1);
+      };
 
-            //This code links in the Rock button so that when it's clicked it fires off the game.
+      // Paper Button
 
-            // Rock Button
+      document.getElementById('paper').onclick = () => {
+        rockPaperScissors(2);
+      };
 
-            document.getElementById('rock').onclick = () => {
-                rockPaperScissors(1);
-            };
+      // Scissors Button
 
-            // Paper Button
+      document.getElementById('scissors').onclick = () => {
+        rockPaperScissors(3);
+      };
 
-            document.getElementById('paper').onclick = () => {
-                rockPaperScissors(2);
-            };
+      // Scissors Button
 
-            // Scissors Button
+      document.getElementById('lizard').onclick = () => {
+        rockPaperScissors(4);
+      };
 
-            document.getElementById('scissors').onclick = () => {
-                rockPaperScissors(3);
-            };
+      // Scissors Button
 
-            // Scissors Button
-
-            document.getElementById('lizard').onclick = () => {
-                rockPaperScissors(4);
-            };
-
-            // Scissors Button
-
-            document.getElementById('spock').onclick = () => {
-                rockPaperScissors(5);
-            };
-            //STEP 5:
-            //Below, link up the other two buttons with an EventListener so that the user can click on them and activate the game.
-        </script>
-    </body>
-
+      document.getElementById('spock').onclick = () => {
+        rockPaperScissors(5);
+      };
+      //STEP 5:
+      //Below, link up the other two buttons with an EventListener so that the user can click on them and activate the game.
+    </script>
+  </body>
 </html>
