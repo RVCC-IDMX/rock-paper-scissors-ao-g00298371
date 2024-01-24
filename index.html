@@ -1,200 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock Paper Scissors</title>
 
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
-        #result {
+      :root {
+        --element-border-radius: 30px;
+        --pseudo-border-radius: 30px;
+        --pseudo-border: 7px solid black;
+        --box-border: 10px solid black;
+        --button-border: 6px solid black;
+        --button-border-radius: 10px;
+        --button-background-color: #ffecb8;
+        --result-background-color: #f6a6b2;
+        --title-background-color: #b7ded2;
+        --ui-panel-background-color: #f7c297;
+        --page-background-color: #90d2d8;
+        --max-element-width: 500px;
+        /* Color Palette: https://www.color-hex.com/color-palette/43555 */
+      }
+      *,
+      *::before,
+      *::after {
+        font-family: 'Oswald', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
+      body {
+        background: var(--page-background-color);
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      #result {
+        border: 5px solid black;
+        background: var(--result-background-color);
+        border-radius: var(--element-border-radius);
+        font-size: 2rem;
+        padding-block: 1rem;
+        padding-inline: 2rem;
+        min-height: 4rem;
+        max-width: 800px;
+      }
+
+      #result::before {
+        content: 'Result: ';
+        font-weight: bold;
+        font-size: 2.2rem;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 1;
         }
 
-        #bid{
-            border:1px solid black;
-            margin:20px;
-            padding:20px;
-            text-align:center;
+        50% {
+          opacity: 0;
         }
 
-        #bid h1 {
-            padding:0px;
-            margin:0px;
-            padding-bottom:20px;
+        100% {
+          opacity: 1;
         }
+      }
 
-        #choices {
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            padding:auto;
-        }
-        
-        button {
-            font-size:20px;
-            font-family:Georgia;
-            padding:20px;
-        }
+      #result::after {
+        content: '|';
+        font-size: 2.6rem;
+        animation: blink 1s infinite ease-in-out;
+      }
 
+      #bid::before {
+        display: block;
+        content: 'ROCK PAPER SCISSORS LIZARD SPOCK';
+        background: var(--title-background-color);
+        font-size: 2rem;
+        font-weight: bold;
+        padding: 0.7rem;
+        border: var(--pseudo-border);
+        border-radius: var(--pseudo-border-radius);
+        margin-block-end: 2rem;
+      }
+
+      #bid {
+        background: var(--ui-panel-background-color);
+        border: var(--box-border);
+        border-radius: var(--element-border-radius);
+        margin-block-end: 3rem;
+        padding-inline: 20px;
+        padding-block: 20px;
+        text-align: center;
+      }
+
+      #bid,
+      #result {
+        padding: 1rem;
+      }
+
+      #bid h1 {
+        padding: 0px;
+        margin: 0px;
+        font-size: 2rem;
+        padding-block-end: 20px;
+      }
+
+      #choices {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      button {
+        transition: transform 100ms ease-out;
+        transform: scale(1);
+        border: var(--button-border);
+        background: var(--button-background-color);
+        font-weight: bold;
+        border-radius: var(--button-border-radius);
+        font-size: 2rem;
+        padding-inline: 20px;
+        padding-block: 10px;
+      }
+
+      button:hover {
+        transition: transform 250ms ease-out;
+        transform: scale(1.1);
+      }
+
+      #authors {
+        padding: 1rem;
+        margin-block: 2rem;
+        font-size: 2rem;
+      }
     </style>
+  </head>
 
-</head>
-<body>
-
+  <body>
+    <div id="authors">Alex O'Neill and Eric Brown</div>
     <div id="result">
-
-        <!-- This is where our results will go -->
-
+      <!-- This is where our results will go -->
     </div>
 
     <div id="bid">
+      <h1>Choose:</h1>
 
-        <h1>Choose:</h1>
+      <div id="choices">
+        <button id="rock">Rock</button>
 
-        <div id="choices">
+        <button id="paper">Paper</button>
 
-            <button id="rock">Rock</button>
+        <button id="scissors">Scissors</button>
 
-            <button id="paper">Paper</button>
+        <button id="lizard">Lizard</button>
 
-            <button id="scissors">Scissors</button>
-
-        </div>
-
+        <button id="spock">Spock</button>
+      </div>
     </div>
 
     <script>
+      /*
+                  Random number generator
+      
+                  When this function is called, it returns a random number from 1 to the number of sides passed to it.
+              */
+      function dice(sides) {
+        return Math.ceil(Math.random() * sides);
+      }
 
-        /*
-            Random number generator
+      /*
+                  Game function
+      
+                  It takes a single argument: humanChoice
+                  1 = rock
+                  2 = paper
+                  3 = scissors
+      
+                  When this function is called, it:
+                  1) Makes the computer choose its position
+                  2) Determines who wins
+                  3) Displays the play of the game
+                  
+              */
+      function rockPaperScissors(humanChoice) {
+        // Disabling all input until the animation is finished to prevent weird behavior.
+        document.querySelectorAll('button').forEach((button) => {
+          button.disabled = true;
+        });
 
-            When this function is called, it returns a random number from 1 to the number of sides passed to it.
-        */
-        function dice(sides) {
-            return Math.ceil(Math.random() * sides);
+        var choiceName = ['Rock', 'Paper', 'Scissors', 'Lizard', 'Spock'];
+
+        //STEP 1:
+        //Determine a random choice for the computer
+        //1 is rock
+        //2 is paper
+        //3 is scissors
+        //4 is lizard
+        //5 is Spock
+        var computerChoice = dice(5);
+
+        //This boolean value represents if the human won
+        var humanWins = false;
+
+        //This boolean value represents if there's a tie
+        var tied = false;
+
+        //STEP 2:
+        //Check to see who won and set humanWins & tied
+        //You'll need to build additional if statements
+        if (humanChoice == computerChoice) {
+          tied = true;
+        }
+        //1 is rock (beats scissors(3) and lizard(4))
+        //2 is paper (beats rock(1) and spock(5))
+        //3 is scissors (beats paper(2) and lizard(4))
+        //4 is lizard (beats Spock(5) and paper(2))
+        //5 is Spock (beats scissors(3) and rock(1))
+        if (humanChoice == 1) {
+          if (computerChoice == 3 || computerChoice == 4) {
+            humanWins = true;
+          }
         }
 
-        /*
-            Game function
-
-            It takes a single argument: humanChoice
-            1 = rock
-            2 = paper
-            3 = scissors
-
-            When this function is called, it:
-            1) Makes the computer choose its position
-            2) Determines who wins
-            3) Displays the play of the game
-            
-        */
-        function rockPaperScissors(humanChoice) {
-
-            console.log(humanChoice);
-
-            var choiceName = ["Rock","Paper","Scissors"];
-
-            //STEP 1:
-            //Determine a random choice for the computer
-            //1 is rock
-            //2 is paper
-            //3 is scissors
-            var computerChoice = dice(3);
-
-
-            //This boolean value represents if the human won
-            var humanWins = false;
-
-            //This boolean value represents if there's a tie
-            var tied = false;
-
-            //STEP 2:
-            //Check to see who won and set humanWins & tied
-            //You'll need to build additional if statements
-            if (humanChoice == computerChoice) {
-                tied = true;
-            }
-
-            if (humanChoice == 1){
-                if (computerChoice == 3) {
-                    humanWins = true;
-                }
-            }
-
-            if (humanChoice == 2) {
-                if (computerChoice == 1) {
-                    humanWins = true;
-                }
-            }
-
-            if (humanChoice == 3) {
-                if (computerChoice == 2) {
-                    humanWins = true;
-                }
-            }
-
-
-            // STEP 3:
-            // Build a string to display the results of the game
-            // Put it in the end variable
-            // It should include:
-            //    a) What you chose
-            //    b) What the computer chose
-            //    c) Whether you won or not
-            // You may need if statements somewhere around this task
-            var end = `The computer chose ${choiceName[computerChoice-1]} and you chose ${choiceName[humanChoice-1]}.`;
-
-            if (tied) {
-                end += ` You tied!`
-            }
-            else if (humanWins) {
-                end += ` You won!`
-            }
-            else {
-                end += ` You lost!`
-            }
-
-            console.log(end);
-
-            //STEP 4:
-            //Reach out into the DOM with getElementById() and insert the end into the result div.
-
-            let result = document.getElementById("result");
-            result.innerHTML = end;
-
+        if (humanChoice == 2) {
+          if (computerChoice == 1 || computerChoice == 5) {
+            humanWins = true;
+          }
         }
 
-        //This code links in the Rock button so that when it's clicked it fires off the game.
-        
-        
-        // Rock Button
+        if (humanChoice == 3) {
+          if (computerChoice == 2 || computerChoice == 4) {
+            humanWins = true;
+          }
+        }
+        if (humanChoice == 4) {
+          if (computerChoice == 2 || computerChoice == 5) {
+            humanWins = true;
+          }
+        }
+        if (humanChoice == 5) {
+          if (computerChoice == 3 || computerChoice == 1) {
+            humanWins = true;
+          }
+        }
 
+        // STEP 3:
+        // Build a string to display the results of the game
+        // Put it in the end variable
+        // It should include:
+        //    a) What you chose
+        //    b) What the computer chose
+        //    c) Whether you won or not
+        // You may need if statements somewhere around this task
+        var end = `The computer chose ${
+          choiceName[computerChoice - 1]
+        } and you chose ${choiceName[humanChoice - 1]}.`;
 
-        document.getElementById("rock").onclick = () => {
-            rockPaperScissors(1);
-        };
+        if (tied) {
+          end += ` You tied!`;
+        } else if (humanWins) {
+          end += ` You won!`;
+        } else {
+          end += ` You lost!`;
+        }
 
+        // console.log(end);
 
-        // Paper Button
+        //STEP 4:
+        //Reach out into the DOM with getElementById() and insert the end into the result div.
 
-        document.getElementById("paper").onclick = () => {
-            rockPaperScissors(2);
-        };
+        let result = document.getElementById('result');
 
+        let index = 0;
 
-        // Scissors Button
+        result.innerText = '';
+        function type() {
+          if (index < end.length) {
+            // Append each letter one by one with a delay to simulate typing
+            result.innerText += end[index];
+            index += 1;
+            setTimeout(type, 30);
+          } else {
+            // If there's no more text for the computer to type, then re-enable the buttons.
+            document.querySelectorAll('button').forEach((button) => {
+              button.disabled = false;
+            });
+          }
+        }
 
-        document.getElementById("scissors").onclick = () => {
-            rockPaperScissors(3);
-        };
+        type();
+      }
 
+      //This code links in the Rock button so that when it's clicked it fires off the game.
 
+      // Rock Button
 
-        //STEP 5:
-        //Below, link up the other two buttons with an EventListener so that the user can click on them and activate the game.
+      document.getElementById('rock').onclick = () => {
+        rockPaperScissors(1);
+      };
 
+      // Paper Button
 
+      document.getElementById('paper').onclick = () => {
+        rockPaperScissors(2);
+      };
+
+      // Scissors Button
+
+      document.getElementById('scissors').onclick = () => {
+        rockPaperScissors(3);
+      };
+
+      // Scissors Button
+
+      document.getElementById('lizard').onclick = () => {
+        rockPaperScissors(4);
+      };
+
+      // Scissors Button
+
+      document.getElementById('spock').onclick = () => {
+        rockPaperScissors(5);
+      };
+      //STEP 5:
+      //Below, link up the other two buttons with an EventListener so that the user can click on them and activate the game.
     </script>
-    
-</body>
+  </body>
 </html>
